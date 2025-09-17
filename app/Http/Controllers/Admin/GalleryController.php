@@ -44,7 +44,7 @@ class GalleryController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('images/galleries');
+            $data['image_path'] = $request->file('image')->store('images/galleries', 'public');
         }
 
         unset($data['image']);
@@ -72,7 +72,7 @@ class GalleryController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('images/galleries');
+            $data['image_path'] = $request->file('image')->store('images/galleries', 'public');
         }
 
         unset($data['image']);

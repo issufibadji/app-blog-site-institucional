@@ -49,7 +49,9 @@ class Gallery extends Model
      */
     public function getImageUrlAttribute(): string
     {
-        return $this->image_path ? asset("storage/{$this->image_path}") : asset('import/assets/post-pic-dummy.png');
+        return $this->image_path
+            ? Storage::disk('public')->url($this->image_path)
+            : asset('import/assets/post-pic-dummy.png');
     }
 
     /**
@@ -59,13 +61,13 @@ class Gallery extends Model
     {
         static::updating(function (Gallery $gallery): void {
             if ($gallery->isDirty('image_path') && !is_null($gallery->getRawOriginal('image_path'))) {
-                Storage::delete($gallery->getRawOriginal('image_path'));
+                Storage::disk('public')->delete($gallery->getRawOriginal('image_path'));
             }
         });
 
         static::deleting(function (Gallery $gallery): void {
             if (!is_null($gallery->getRawOriginal('image_path'))) {
-                Storage::delete($gallery->getRawOriginal('image_path'));
+                Storage::disk('public')->delete($gallery->getRawOriginal('image_path'));
             }
         });
     }
