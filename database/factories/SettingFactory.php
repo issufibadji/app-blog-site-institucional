@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Support\TextSanitizer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,11 +18,11 @@ class SettingFactory extends Factory
     public function definition()
     {
         return [
-            'site_name' => fake()->word(),
+            'site_name' => TextSanitizer::sanitizedFrom(fn () => fake()->word()),
             'contact_email' => fake()->email(),
-            'description' => fake()->sentence(),
-            'about' => fake()->paragraph(1),
-            'copy_rights' => fake()->sentence(),
+            'description' => TextSanitizer::sanitizedFrom(fn () => fake()->sentence()),
+            'about' => TextSanitizer::sanitizedFrom(fn () => fake()->paragraph(1)),
+            'copy_rights' => TextSanitizer::sanitizedFrom(fn () => fake()->sentence()),
             'url_fb' => fake()->url(),
             'url_twitter' => fake()->url(),
             'url_insta' => fake()->url(),

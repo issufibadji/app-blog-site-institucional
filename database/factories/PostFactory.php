@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use Illuminate\Support\Facades\File;
+use App\Support\TextSanitizer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +19,7 @@ class PostFactory extends Factory
      */
     public function definition()
     {
-        $title = fake()->sentence();
+        $title = TextSanitizer::sanitizedFrom(fn () => fake()->sentence());
         $slug = str($title)->slug();
 
 
@@ -27,11 +27,10 @@ class PostFactory extends Factory
             'user_id' => rand(1,10),
             'category_id' => rand(1,5),
             'title' => $title,
-            'content' => fake()->paragraph(6),
+            'content' => TextSanitizer::sanitizedFrom(fn () => fake()->paragraph()),
             'status' => fake()->boolean(),
             'slug' => $slug,
             'image' => null,
-            'content' => fake()->paragraph(),
         ];
     }
 }
