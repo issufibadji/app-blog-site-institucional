@@ -47,9 +47,6 @@
                     <a href="{{ route('gallery') }}" class="hover:text-blue-700">Galeria</a>
                     <a href="{{ route('blog.index') }}" class="hover:text-blue-700">Blog</a>
                     <a href="{{ route('contacts') }}" class="hover:text-blue-700">Contactos</a>
-                    @foreach ($pages_nav as $page)
-                        <a href="{{ route('page.show', $page->slug) }}" class="hover:text-blue-700">{{ $page->name }}</a>
-                    @endforeach
                 </nav>
                 <div class="hidden md:flex items-center gap-4 text-blue-900 text-xl">
                     <a href="{{ $setting->url_fb }}" aria-label="Facebook" class="hover:text-blue-700"><i class="fab fa-facebook"></i></a>
@@ -67,9 +64,6 @@
                         <a href="{{ route('gallery') }}" class="block">Galeria</a>
                         <a href="{{ route('blog.index') }}" class="block">Blog</a>
                         <a href="{{ route('contacts') }}" class="block">Contactos</a>
-                        @foreach ($pages_nav as $page)
-                            <a href="{{ route('page.show', $page->slug) }}" class="block">{{ $page->name }}</a>
-                        @endforeach
                         <div class="flex flex-wrap gap-4 pt-4 text-lg text-blue-900">
                             <a href="{{ $setting->url_fb }}" aria-label="Facebook" class="hover:text-blue-700"><i class="fab fa-facebook"></i></a>
                             <a href="{{ $setting->url_insta }}" aria-label="Instagram" class="hover:text-blue-700"><i class="fab fa-instagram"></i></a>
@@ -177,9 +171,6 @@
                         <li><a href="{{ route('gallery') }}" class="hover:text-white">Galeria</a></li>
                         <li><a href="{{ route('blog.index') }}" class="hover:text-white">Blog</a></li>
                         <li><a href="{{ route('contacts') }}" class="hover:text-white">Contactos</a></li>
-                        @foreach ($pages_footer as $page)
-                            <li><a href="{{ route('page.show', $page->slug) }}" class="hover:text-white">{{ $page->name }}</a></li>
-                        @endforeach
                     </ul>
                 </div>
                 <div>
