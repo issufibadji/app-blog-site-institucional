@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 
@@ -30,5 +32,7 @@ Route::middleware(['auth', 'can:admin-login'])->name('admin.')->prefix('/admin')
         Route::resource('/page', PageController::class);
         Route::resource('/role', RoleController::class, ['only' => ['index']]);
         Route::resource('/setting', SettingController::class, ['only' => ['index', 'update']]);
+        Route::resource('/service', ServiceController::class);
+        Route::resource('/gallery', GalleryController::class);
     });
 });

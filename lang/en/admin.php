@@ -16,4 +16,10 @@ return [
     'tag_deleted' => 'Tag Deleted !',
     'user_deleted' => 'User Deleted !',
     'role_updated' => 'Role to user Updated !',
+    'service_created' => 'Service Created !',
+    'service_updated' => 'Service Updated !',
+    'service_deleted' => 'Service Deleted !',
+    'gallery_created' => 'Gallery image Created !',
+    'gallery_updated' => 'Gallery image Updated !',
+    'gallery_deleted' => 'Gallery image Deleted !',
 ];
