@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Support\TextSanitizer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class TagFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->unique()->word(),
+            'name' => TextSanitizer::sanitizedFrom(fn () => fake()->unique()->word()),
         ];
     }
 }

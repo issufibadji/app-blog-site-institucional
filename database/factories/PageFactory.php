@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Support\TextSanitizer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,12 +17,12 @@ class PageFactory extends Factory
      */
     public function definition()
     {
-        $name = fake()->unique()->word();
+        $name = TextSanitizer::sanitizedFrom(fn () => fake()->unique()->word());
         $slug = str($name)->slug();
         return [
             'user_id' => rand(1,10),
             'name' => $name,
-            'content' => fake()->paragraph(6),
+            'content' => TextSanitizer::sanitizedFrom(fn () => fake()->paragraph(6)),
             'navbar' => fake()->boolean(),
             'footer' => fake()->boolean(),
             'slug' => $slug,
