@@ -95,17 +95,27 @@
                 <i class="fas fa-tag mr-3"></i>
                 Tags
             </a>
-            @can('admin-only')
-                <a href="{{ route('admin.page.index') }}"
-                    class="{{ request()->routeIs('*.page.*') ? 'active-nav-link' : 'opacity-75 hover:opacity-100' }} flex items-center text-white  py-4 pl-6 nav-item">
-                    <i class="far fa-file mr-3"></i>
-                    Pages
-                </a>
-                <a href="{{ route('admin.role.index') }}"
-                    class="{{ request()->routeIs('*.role.*') ? 'active-nav-link' : 'opacity-75 hover:opacity-100' }} flex items-center text-white  py-4 pl-6 nav-item">
-                    <i class="fas fa-user-shield mr-3"></i>
-                    Roles
-                </a>
+                @can('admin-only')
+                    <a href="{{ route('admin.page.index') }}"
+                        class="{{ request()->routeIs('*.page.*') ? 'active-nav-link' : 'opacity-75 hover:opacity-100' }} flex items-center text-white  py-4 pl-6 nav-item">
+                        <i class="far fa-file mr-3"></i>
+                        Pages
+                    </a>
+                    <a href="{{ route('admin.service.index') }}"
+                        class="{{ request()->routeIs('*.service.*') ? 'active-nav-link' : 'opacity-75 hover:opacity-100' }} flex items-center text-white  py-4 pl-6 nav-item">
+                        <i class="fas fa-concierge-bell mr-3"></i>
+                        Services
+                    </a>
+                    <a href="{{ route('admin.gallery.index') }}"
+                        class="{{ request()->routeIs('*.gallery.*') ? 'active-nav-link' : 'opacity-75 hover:opacity-100' }} flex items-center text-white  py-4 pl-6 nav-item">
+                        <i class="fas fa-images mr-3"></i>
+                        Portfolio
+                    </a>
+                    <a href="{{ route('admin.role.index') }}"
+                        class="{{ request()->routeIs('*.role.*') ? 'active-nav-link' : 'opacity-75 hover:opacity-100' }} flex items-center text-white  py-4 pl-6 nav-item">
+                        <i class="fas fa-user-shield mr-3"></i>
+                        Roles
+                    </a>
                 <a href="{{ route('admin.user.index') }}"
                     class="{{ request()->routeIs('*.user.*') ? 'active-nav-link' : 'opacity-75 hover:opacity-100' }} flex items-center text-white  py-4 pl-6 nav-item">
                     <i class="fas fa-users mr-3"></i>
@@ -207,6 +217,16 @@
                         class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
                         <i class="fas fa-align-left mr-3"></i>
                         Pages
+                    </a>
+                    <a href="{{ route('admin.service.index') }}"
+                        class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
+                        <i class="fas fa-concierge-bell mr-3"></i>
+                        Services
+                    </a>
+                    <a href="{{ route('admin.gallery.index') }}"
+                        class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
+                        <i class="fas fa-images mr-3"></i>
+                        Portfolio
                     </a>
                     <a href="{{ route('admin.role.index') }}"
                         class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
