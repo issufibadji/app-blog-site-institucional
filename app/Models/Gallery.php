@@ -59,7 +59,20 @@ class Gallery extends Model
             return $path;
         }
 
-        $normalizedPath = ltrim($path, '/');
+        $normalizedPath = str_replace('\\', '/', $path);
+        $normalizedPath = ltrim($normalizedPath, '/');
+
+        $prefixesToStrip = [
+            'public/',
+            'storage/public/',
+            'storage/app/public/',
+        ];
+
+        foreach ($prefixesToStrip as $prefix) {
+            if (str_starts_with($normalizedPath, $prefix)) {
+                $normalizedPath = substr($normalizedPath, strlen($prefix));
+            }
+        }
 
         if (str_starts_with($normalizedPath, 'storage/')) {
             $publicPath = public_path($normalizedPath);
@@ -76,6 +89,11 @@ class Gallery extends Model
 
         if (file_exists(public_path($normalizedPath))) {
             return asset($normalizedPath);
+        }
+
+        $publicStoragePath = 'storage/' . ltrim($normalizedPath, '/');
+        if (file_exists(public_path($publicStoragePath))) {
+            return asset($publicStoragePath);
         }
 
         return asset('import/assets/post-pic-dummy.png');
