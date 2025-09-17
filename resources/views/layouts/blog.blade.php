@@ -46,6 +46,10 @@
         </div>
         }
     @endif
+    @php
+        $allowedPageNames = ['Início', 'Sobre nós', 'Serviços', 'Galeria', 'Blog', 'Contactos'];
+    @endphp
+
     <!-- Top Bar Nav -->
     <nav class="w-full py-4 bg-blue-800 shadow">
         <div class="w-full container mx-auto flex flex-wrap items-center justify-between">
@@ -53,8 +57,10 @@
             <nav>
                 <ul class="flex items-center justify-between font-bold text-sm text-white uppercase no-underline">
                     @foreach ($pages_nav as $page)
-                        <li><a class="hover:text-gray-200 hover:underline px-4"
-                                href="{{ route('page.show', $page->slug) }}">{{ $page->name }}</a></li>
+                        @if (in_array($page->name, $allowedPageNames))
+                            <li><a class="hover:text-gray-200 hover:underline px-4"
+                                    href="{{ route('page.show', $page->slug) }}">{{ $page->name }}</a></li>
+                        @endif
                     @endforeach
 
                     @auth
@@ -198,7 +204,9 @@
         <div class="w-full container mx-auto flex flex-col items-center">
             <div class="flex flex-col md:flex-row text-center md:text-left md:justify-between py-6">
                 @foreach ($pages_footer as $page)
-                    <a href="{{ route('page.show', $page->slug) }}" class="uppercase px-3 hover:text-blue-700">{{ $page->name }}</a>
+                    @if (in_array($page->name, $allowedPageNames))
+                        <a href="{{ route('page.show', $page->slug) }}" class="uppercase px-3 hover:text-blue-700">{{ $page->name }}</a>
+                    @endif
                 @endforeach
             </div>
             <div class="uppercase pb-6">&copy; {{ $setting->copy_rights }}</div>
