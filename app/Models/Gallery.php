@@ -49,20 +49,33 @@ class Gallery extends Model
      */
     public function getImageUrlAttribute(): string
     {
-        if (is_null($this->image_path) || $this->image_path === '') {
+        $path = $this->image_path;
+
+        if (is_null($path) || $path === '') {
             return asset('import/assets/post-pic-dummy.png');
         }
 
-        if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
-            return $this->image_path;
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return $path;
         }
 
-        if (Storage::disk('public')->exists($this->image_path)) {
-            return Storage::disk('public')->url($this->image_path);
+        $normalizedPath = ltrim($path, '/');
+
+        if (str_starts_with($normalizedPath, 'storage/')) {
+            $publicPath = public_path($normalizedPath);
+            if (file_exists($publicPath)) {
+                return asset($normalizedPath);
+            }
+
+            $normalizedPath = ltrim(substr($normalizedPath, strlen('storage/')), '/');
         }
 
-        if (file_exists(public_path($this->image_path))) {
-            return asset($this->image_path);
+        if (Storage::disk('public')->exists($normalizedPath)) {
+            return Storage::disk('public')->url($normalizedPath);
+        }
+
+        if (file_exists(public_path($normalizedPath))) {
+            return asset($normalizedPath);
         }
 
         return asset('import/assets/post-pic-dummy.png');
