@@ -83,6 +83,16 @@ GET | api/posts/{id} | Show Specific Post
 6. Run migrations by executing `php artisan migrate` , Then Run  `php artisan db:seed` if you want use faker database records,
 7. Start the project by running `php artisan serve`
 
+### Demo Data Seeding
+
+Populate the application with ready-to-use demo content (including services and portfolio gallery items) by running:
+
+```
+php artisan db:seed
+```
+
+This command will create the default admin account and fill the main sections of the public site so you can explore the layout without manual data entry.
+
 ### Demo Account
 - AdminURL: http://127.0.0.1:8000/admin
 - Email: admin@example.com
