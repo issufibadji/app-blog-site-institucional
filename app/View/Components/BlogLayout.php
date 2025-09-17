@@ -12,14 +12,16 @@ use Illuminate\View\Component;
 class BlogLayout extends Component
 {
     public $title;
+    public bool $withSidebar;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($title = null)
+    public function __construct($title = null, bool $withSidebar = false)
     {
         $this->title = $title;
+        $this->withSidebar = $withSidebar;
     }
 
     /**
@@ -38,6 +40,15 @@ class BlogLayout extends Component
             $q->where('status', true);
         })->get();
 
-        return view('layouts.blog', compact('categories', 'top_users', 'setting', 'pages_nav', 'pages_footer', 'tags'));
+        return view('layouts.blog', [
+            'categories' => $categories,
+            'top_users' => $top_users,
+            'setting' => $setting,
+            'pages_nav' => $pages_nav,
+            'pages_footer' => $pages_footer,
+            'tags' => $tags,
+            'withSidebar' => $this->withSidebar,
+            'title' => $this->title,
+        ]);
     }
 }

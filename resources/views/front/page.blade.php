@@ -1,18 +1,8 @@
 <x-blog-layout title="{{ $page->name }}">
-
-    {{-- <div class="container mx-auto flex flex-wrap py-6 w-full"> --}}
-
-        <!-- Post Section -->
-        <section class="w-full flex flex-col items-center px-3">
-
-            <article class="flex flex-col w-full shadow my-4">
-                <!-- Article Image -->
-                <div class="bg-white flex flex-col justify-start p-6 w-">
-                    <div class="text-3xl font-bold pb-4 text-center">{{ $page->name }}</div>
-                    {!! $page->content !!}
-                </div>
-            </article>
-
-        </section>
-
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 space-y-6">
+        <h1 class="text-4xl font-bold text-gray-900 text-center">{{ $page->name }}</h1>
+        <div class="prose max-w-none prose-blue mx-auto">
+            {!! $page->content !!}
+        </div>
+    </article>
 </x-blog-layout>

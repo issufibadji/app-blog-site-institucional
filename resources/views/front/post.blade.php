@@ -1,134 +1,103 @@
-<x-blog-layout title="{{ $post_title }}">
-
-    <div class="container mx-auto flex flex-wrap py-6">
-
-        <!-- Post Section -->
-        <section class="w-full md:w-2/3 flex flex-col items-center px-3">
-
-
-            <article class="flex flex-col shadow my-4">
-                <!-- Article Image -->
-                    <img src="{{ $post->image }}" width="1000" height="500">
-                <div class="bg-white flex flex-col justify-start p-6">
-                    <a href="{{ route('category.show', $post->category->slug) }}"
-                        class="text-blue-700 text-sm font-bold uppercase pb-4">{{ $post->category->name }}</a>
-                    <div class="text-3xl font-bold pb-4">{{ $post->title }}</div>
-                    <p href="#" class="text-sm pb-8">
-                        By <a href="#" class="font-semibold hover:text-blue-800">{{ $post->user->name }}</a>,
-                        Published on {{ $post->created_at }}
-                    </p>
-                    {!! $post->content !!}
-                </div>
-            </article>
-            {{-- author --}}
-            <div class="w-full flex flex-col text-center md:text-left md:flex-row shadow bg-white mt-10 mb-10 p-6">
-                <div class="w-full md:w-1/5 flex justify-center md:justify-start pb-4">
-                        <img src="{{ $post->user->avatar }}"
-                            class="rounded-full shadow h-32 w-32">
-                </div>
-                <div class="flex-1 flex flex-col justify-center md:justify-start">
-                    <p class="font-semibold text-2xl">{{ $post->user->name }}</p>
-                    <p class="pt-2">{{ $post->user->bio }}</p>
-                    <div
-                        class="flex items-center justify-center md:justify-start text-2xl no-underline text-blue-800 pt-4">
-                        <a class="" href="{{ $post->user->url_fb }}">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        <a class="pl-4" href="{{ $post->user->url_insta }}">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a class="pl-4" href="{{ $post->user->url_twitter }}">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a class="pl-4" href="{{ $post->user->url_linkedin }}">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                    </div>
-                </div>
+<x-blog-layout :with-sidebar="true" title="{{ $post_title }}">
+    <article class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+        <img src="{{ $post->image }}" alt="{{ $post->title }}" class="w-full h-96 object-cover">
+        <div class="p-8 space-y-6">
+            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                <a href="{{ route('category.show', $post->category->slug) }}" class="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold uppercase tracking-wider">{{ $post->category->name }}</a>
+                <span>{{ $post->created_at }}</span>
             </div>
-            {{--  --}}
-            {{-- comment section --}}
-            @auth
+            <h1 class="text-4xl font-bold text-gray-900">{{ $post->title }}</h1>
+            <div class="prose max-w-none prose-blue">
+                {!! $post->content !!}
+            </div>
+        </div>
+    </article>
+
+    <section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col md:flex-row gap-6">
+        <div class="md:w-32 md:flex-shrink-0">
+            <img src="{{ $post->user->avatar }}" alt="{{ $post->user->name }}" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover">
+        </div>
+        <div class="flex-1 space-y-3">
+            <h2 class="text-2xl font-semibold text-gray-900">{{ $post->user->name }}</h2>
+            <p class="text-gray-600">{{ $post->user->bio }}</p>
+            <div class="flex items-center gap-4 text-xl text-blue-700">
+                <a href="{{ $post->user->url_fb }}" class="hover:text-blue-900"><i class="fab fa-facebook"></i></a>
+                <a href="{{ $post->user->url_insta }}" class="hover:text-blue-900"><i class="fab fa-instagram"></i></a>
+                <a href="{{ $post->user->url_twitter }}" class="hover:text-blue-900"><i class="fab fa-twitter"></i></a>
+                <a href="{{ $post->user->url_linkedin }}" class="hover:text-blue-900"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="space-y-8">
+        @auth
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-4">Deixe o seu comentário</h2>
                 @if ($errors->any())
-                    <div role="alert">
-                        <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2 mx-4">
-                            Validation Errors
-                        </div>
-                        <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700 mx-4">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+                    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 text-red-700 p-4">
+                        <p class="font-semibold">Ocorreram alguns erros:</p>
+                        <ul class="list-disc list-inside text-sm mt-2 space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 @endif
-                <div class="w-full flex text-center md:text-left md:flex-col shadow bg-white mt-10 mb-10 p-6">
-                    <p class="font-semibold text-2xl pb-2">Comment As: {{ auth()->user()->name }}</p>
-                    <form method="POST" action="{{ route('post.comment', $post) }}">
-                        @csrf
-                        <textarea class="w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg" name="body" cols="30" rows="10" placeholder="Write your comment here .."></textarea>
-                        <button type="submit"
-                            class="mt-2 py-2 px-4 bg-green-500 hover:bg-green-700 hover:text-white">Submit
-                            Comment</button>
-                    </form>
+                <form method="POST" action="{{ route('post.comment', $post) }}" class="space-y-4">
+                    @csrf
+                    <textarea name="body" rows="5" class="w-full rounded-xl border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="Escreva a sua mensagem"></textarea>
+                    <button type="submit" class="inline-flex items-center px-6 py-3 bg-blue-700 text-white font-semibold rounded-full hover:bg-blue-800">Publicar comentário</button>
+                </form>
+            </div>
+        @else
+            <div class="bg-blue-50 border border-blue-100 rounded-3xl p-8 text-center">
+                <h2 class="text-2xl font-semibold text-blue-900">Quer participar na conversa?</h2>
+                <p class="mt-3 text-blue-800">Faça login para partilhar a sua opinião sobre este conteúdo.</p>
+                <div class="mt-6 flex flex-wrap justify-center gap-4">
+                    <a href="{{ route('login') }}" class="px-6 py-3 bg-blue-700 text-white font-semibold rounded-full hover:bg-blue-800">Iniciar sessão</a>
+                    <a href="{{ route('register') }}" class="px-6 py-3 border border-blue-700 text-blue-700 font-semibold rounded-full hover:bg-blue-700 hover:text-white">Criar conta</a>
                 </div>
-            @else
-                <div class="w-full flex text-center md:text-left md:flex-col shadow bg-red-400 mt-10 mb-10 p-6">
-                    <p class="font-semibold text-white text-2xl pb-2"> Signin to able to comment !</p>
-                </div>
-            @endauth
+            </div>
+        @endauth
 
-            <div class="w-full flex text-center md:text-left md:flex-col shadow bg-white mt-10 mb-10 p-6">
-                <p class="font-semibold text-2xl pb-2">Comments</p>
-                {{-- user comments --}}
-                @foreach ($comments as $comment)
-                    <div class="w-full flex text-center md:text-left md:flex-col shadow bg-white mt-10 mb-10 p-6">
-                        <p class="font-semibold text-xl pb-2">{{ $comment->user->name }}</p>
-                        <p class="font-semibold text-gray-600 text-lg pb-2">{{ $comment->body }}</p>
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 space-y-6">
+            <h2 class="text-2xl font-semibold text-gray-900">Comentários</h2>
+            @forelse ($comments as $comment)
+                <div class="border-t border-gray-100 pt-6">
+                    <div class="flex items-center justify-between">
+                        <p class="font-semibold text-gray-900">{{ $comment->user->name }}</p>
                         @can('delete', $comment)
-                            <form method="POST" action="{{ route('comment.destroy', $comment->id) }}"
-                                onsubmit="return confirm('Are you sure?')">
+                            <form method="POST" action="{{ route('comment.destroy', $comment->id) }}" onsubmit="return confirm('Tem a certeza que pretende eliminar este comentário?')">
                                 @csrf
                                 @method('DELETE')
-                                <button class="py-2 px-4 bg-red-500 hover:bg-red-700 hover:text-white">Delete</button>
+                                <button class="text-sm text-red-600 hover:text-red-800">Remover</button>
                             </form>
                         @endcan
                     </div>
-                @endforeach
-                {{--  --}}
-            </div>
+                    <p class="mt-2 text-gray-600">{{ $comment->body }}</p>
+                </div>
+            @empty
+                <p class="text-gray-600">Ainda não existem comentários. Seja o primeiro a partilhar a sua opinião.</p>
+            @endforelse
+        </div>
+    </section>
 
-            <div class="w-full flex pt-6">
-                @if (isset($post->previous))
-                    <a href="{{ route('post.show', $post->previous->slug) }}"
-                        class="w-1/2 bg-white shadow hover:shadow-md text-left p-6">
-                        <p class="text-lg text-blue-800 font-bold flex items-center"><i
-                                class="fas fa-arrow-left pr-1"></i> Previous</p>
-                        <p class="pt-2">{{ $post->previous->title }}</p>
-                    </a>
-                @else
-                    <div class="w-1/2 bg-white shadow hover:shadow-md text-left p-6">
-                        <p class="pt-2">This is the first post</p>
-                    </div>
-                @endif
-
-                @if (isset($post->next))
-                    <a href="{{ route('post.show', $post->next->slug) }}"
-                        class="w-1/2 bg-white shadow hover:shadow-md text-right p-6">
-                        <p class="text-lg text-blue-800 font-bold flex items-center justify-end">Next <i
-                                class="fas fa-arrow-right pl-1"></i></p>
-                        <p class="pt-2">{{ $post->next->title }}</p>
-                    </a>
-                @else
-                    <div class="w-1/2 bg-white shadow hover:shadow-md text-right p-6">
-                        <p class="pt-2">This is the last post</p>
-                    </div>
-                @endif
-            </div>
-
-
-
-        </section>
-
+    <div class="grid gap-6 md:grid-cols-2">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            @if (isset($post->previous))
+                <span class="text-xs uppercase tracking-wider text-gray-500">Artigo anterior</span>
+                <a href="{{ route('post.show', $post->previous->slug) }}" class="mt-2 block text-lg font-semibold text-blue-700 hover:text-blue-900">{{ $post->previous->title }}</a>
+            @else
+                <p class="text-gray-500">Este é o primeiro artigo da categoria.</p>
+            @endif
+        </div>
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-right">
+            @if (isset($post->next))
+                <span class="text-xs uppercase tracking-wider text-gray-500">Próximo artigo</span>
+                <a href="{{ route('post.show', $post->next->slug) }}" class="mt-2 block text-lg font-semibold text-blue-700 hover:text-blue-900">{{ $post->next->title }}</a>
+            @else
+                <p class="text-gray-500">Este é o último artigo publicado.</p>
+            @endif
+        </div>
+    </div>
 </x-blog-layout>

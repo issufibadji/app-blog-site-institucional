@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 
 <head>
     <meta charset="UTF-8">
@@ -7,204 +7,192 @@
     <title>
         @isset($title)
             {{ ucfirst($title) }} -
-        @endisset {{ config('app.name') }}
+        @endisset{{ config('app.name') }}
     </title>
-    <!-- Tailwind -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-        .font-family-karla {
-            font-family: karla;
+        body {
+            font-family: 'Inter', sans-serif;
         }
     </style>
-
-    <!-- AlpineJS -->
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-    <!-- Font Awesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"
-        integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-white font-family-karla">
-    @if (Session::has('message'))
-        <div class="flex items-center bg-green-500 text-white text-sm font-bold px-4 py-3" role="alert">
-            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path
-                    d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" />
-            </svg>
-            <p>{{ Session::get('message') }}.</p>
+<body class="bg-gray-50 text-gray-900 antialiased">
+    @if (Session::has('message') || Session::has('error'))
+        <div class="container mx-auto px-6 mt-4">
+            <div class="rounded-xl px-6 py-4 shadow-md {{ Session::has('message') ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200' }}">
+                {{ Session::get('message') ?? Session::get('error') }}
+            </div>
         </div>
-    @elseif (Session::has('error'))
-        {
-        <div class="flex items-center bg-red-500 text-white text-sm font-bold px-4 py-3" role="alert">
-            <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path
-                    d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" />
-            </svg>
-            <p>{{ Session::get('error') }}.</p>
-        </div>
-        }
     @endif
-    <!-- Top Bar Nav -->
-    <nav class="w-full py-4 bg-blue-800 shadow">
-        <div class="w-full container mx-auto flex flex-wrap items-center justify-between">
 
-            <nav>
-                <ul class="flex items-center justify-between font-bold text-sm text-white uppercase no-underline">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white shadow-sm border-b border-gray-100" x-data="{ open: false }">
+            <div class="container mx-auto px-6 py-5 flex items-center justify-between gap-6">
+                <div class="flex items-center gap-6">
+                    <a href="{{ route('webhome') }}" class="text-2xl font-semibold text-blue-900">{{ $setting->site_name }}</a>
+                    <p class="hidden md:block text-sm text-gray-500 max-w-md">{{ $setting->description }}</p>
+                </div>
+                <button class="md:hidden text-blue-900" @click="open = !open">
+                    <i :class="open ? 'fas fa-times' : 'fas fa-bars'"></i>
+                </button>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
+                    <a href="{{ route('webhome') }}" class="hover:text-blue-700">Início</a>
+                    <a href="{{ route('about') }}" class="hover:text-blue-700">Sobre nós</a>
+                    <a href="{{ route('services') }}" class="hover:text-blue-700">Serviços</a>
+                    <a href="{{ route('gallery') }}" class="hover:text-blue-700">Galeria</a>
+                    <a href="{{ route('blog.index') }}" class="hover:text-blue-700">Blog</a>
+                    <a href="{{ route('contacts') }}" class="hover:text-blue-700">Contactos</a>
                     @foreach ($pages_nav as $page)
-                        <li><a class="hover:text-gray-200 hover:underline px-4"
-                                href="{{ route('page.show', $page->slug) }}">{{ $page->name }}</a></li>
+                        <a href="{{ route('page.show', $page->slug) }}" class="hover:text-blue-700">{{ $page->name }}</a>
                     @endforeach
-
-                    @auth
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="py-2 px-4 bg-red-500 hover:bg-red-700">LogOut</button>
-                        </form>
-                    @else
-                        <li><a class="py-2 px-4 mr-2 bg-gray-500 hover:bg-gray-700"
-                                href="{{ route('register') }}">Register</a>
-                        <li><a class="py-2 px-4 bg-green-500 hover:bg-green-700" href="{{ route('login') }}">Login</a>
-                        @endauth
-
-                </ul>
-            </nav>
-
-            <div class="flex items-center text-lg no-underline text-white pr-6">
-                <a class="" href="{{ $setting->url_fb }}">
-                    <i class="fab fa-facebook"></i>
-                </a>
-                <a class="pl-6" href="{{ $setting->url_insta }}">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a class="pl-6" href="{{ $setting->url_twitter }}">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a class="pl-6" href="{{ $setting->url_linkedin }}">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-            </div>
-        </div>
-
-    </nav>
-
-    <!-- Text Header -->
-    <header class="w-full container mx-auto">
-        <div class="flex flex-col items-center py-12">
-            <a class="font-bold text-gray-800 uppercase hover:text-gray-700 text-5xl" href="{{ route('webhome') }}">
-                {{ $setting->site_name }}
-            </a>
-            <p class="text-lg text-gray-600">
-                {{ $setting->description }}
-            </p>
-        </div>
-    </header>
-
-    <!-- Topic Nav -->
-    <nav class="w-full py-4 border-t border-b bg-gray-100" x-data="{ open: false }">
-        <div class="block sm:hidden">
-            <a href="#"
-                class="block md:hidden text-base font-bold uppercase text-center flex justify-center items-center"
-                @click="open = !open">
-                Topics <i :class="open ? 'fa-chevron-down' : 'fa-chevron-up'" class="fas ml-2"></i>
-            </a>
-        </div>
-        <div :class="open ? 'block' : 'hidden'" class="w-full flex-grow sm:flex sm:items-center sm:w-auto">
-            <div
-                class="w-full container mx-auto flex flex-col sm:flex-row items-center justify-center text-sm font-bold uppercase mt-0 px-6 py-2">
-                <a href="{{ route('webhome') }}" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Home</a>
-                @forelse ($categories as $category)
-                    <a href="{{ route('category.show', $category->slug) }}"
-                        class="hover:bg-gray-400 rounded py-2 px-4 mx-2">{{ $category->name }}</a>
-                @empty
-                    No Categories !
-                @endforelse
-            </div>
-        </div>
-    </nav>
-
-
-    <div class="container mx-auto flex flex-wrap py-6">
-
-        {{ $slot }}
-
-        <!-- Sidebar Section -->
-        @if (!request()->routeIs('page.show'))
-            <aside class="w-full md:w-1/3 flex flex-col items-center px-3">
-
-                <div class="w-full bg-white shadow flex flex-col my-4 p-6">
-                    <p class="text-xl font-semibold pb-5">About Us</p>
-                    <p class="pb-2">{{ $setting->about }}</p>
-                    {{-- <a href="#"
-                    class="w-full bg-blue-800 text-white font-bold text-sm uppercase rounded hover:bg-blue-700 flex items-center justify-center px-2 py-3 mt-4">
-                    Get to know us
-                </a> --}}
+                </nav>
+                <div class="hidden md:flex items-center gap-4 text-blue-900 text-xl">
+                    <a href="{{ $setting->url_fb }}" aria-label="Facebook" class="hover:text-blue-700"><i class="fab fa-facebook"></i></a>
+                    <a href="{{ $setting->url_insta }}" aria-label="Instagram" class="hover:text-blue-700"><i class="fab fa-instagram"></i></a>
+                    <a href="{{ $setting->url_twitter }}" aria-label="Twitter" class="hover:text-blue-700"><i class="fab fa-twitter"></i></a>
+                    <a href="{{ $setting->url_linkedin }}" aria-label="LinkedIn" class="hover:text-blue-700"><i class="fab fa-linkedin"></i></a>
                 </div>
-
-                <div class="w-full bg-white shadow flex flex-col my-4 p-6">
-                    <p class="text-xl font-semibold pb-5">Tags</p>
-                    <div class="flex flex-wrap">
-
-                        @foreach ($tags as $tag)
-                            <a href="{{ route('tag.show', $tag->name) }}"
-                                class="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-full text-blue-700 bg-blue-100 border border-blue-300 ">
-                                <div class="p-1.5 text-xs font-normal leading-none max-w-full flex-initial">
-                                    {{ $tag->name }}</div>
-                            </a>
+            </div>
+            <div class="md:hidden" x-show="open" x-transition>
+                <nav class="bg-white border-t border-gray-100 shadow-inner">
+                    <div class="px-6 py-4 space-y-3 text-sm font-medium text-gray-700">
+                        <a href="{{ route('webhome') }}" class="block">Início</a>
+                        <a href="{{ route('about') }}" class="block">Sobre nós</a>
+                        <a href="{{ route('services') }}" class="block">Serviços</a>
+                        <a href="{{ route('gallery') }}" class="block">Galeria</a>
+                        <a href="{{ route('blog.index') }}" class="block">Blog</a>
+                        <a href="{{ route('contacts') }}" class="block">Contactos</a>
+                        @foreach ($pages_nav as $page)
+                            <a href="{{ route('page.show', $page->slug) }}" class="block">{{ $page->name }}</a>
                         @endforeach
-
+                        <div class="flex flex-wrap gap-4 pt-4 text-lg text-blue-900">
+                            <a href="{{ $setting->url_fb }}" aria-label="Facebook" class="hover:text-blue-700"><i class="fab fa-facebook"></i></a>
+                            <a href="{{ $setting->url_insta }}" aria-label="Instagram" class="hover:text-blue-700"><i class="fab fa-instagram"></i></a>
+                            <a href="{{ $setting->url_twitter }}" aria-label="Twitter" class="hover:text-blue-700"><i class="fab fa-twitter"></i></a>
+                            <a href="{{ $setting->url_linkedin }}" aria-label="LinkedIn" class="hover:text-blue-700"><i class="fab fa-linkedin"></i></a>
+                        </div>
                     </div>
+                </nav>
+            </div>
+        </header>
+
+        @auth
+            <div class="bg-blue-900 text-white">
+                <div class="container mx-auto px-6 py-2 flex items-center justify-end gap-3 text-sm">
+                    <span>Bem-vindo, {{ auth()->user()->name }}</span>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button class="px-3 py-1 bg-white text-blue-900 font-semibold rounded-full hover:bg-blue-100">Terminar sessão</button>
+                    </form>
                 </div>
+            </div>
+        @else
+            <div class="bg-blue-900 text-white">
+                <div class="container mx-auto px-6 py-2 flex items-center justify-end gap-3 text-sm">
+                    <a href="{{ route('login') }}" class="px-3 py-1 bg-white text-blue-900 font-semibold rounded-full hover:bg-blue-100">Área reservada</a>
+                    <a href="{{ route('register') }}" class="px-3 py-1 border border-white rounded-full hover:bg-white hover:text-blue-900">Criar conta</a>
+                </div>
+            </div>
+        @endauth
 
-                <div class="w-full bg-white shadow flex flex-col my-4 p-6">
-                    <p class="text-xl font-semibold pb-5">Top 5 Writers</p>
-                    {{--  --}}
-                    <div class="content flex justify-between py-2 w-full">
-                        <div class="px-2 justify-between">
-                            Name
+        @stack('hero')
 
+        <main class="flex-1">
+            @if ($withSidebar)
+                <div class="container mx-auto px-6 py-16">
+                    <div class="grid gap-12 lg:grid-cols-[2fr,1fr]">
+                        <div class="space-y-10">
+                            {{ $slot }}
                         </div>
-                        <div class="justify-between">
-                            Posts Count
-                        </div>
-                    </div>
-                    @forelse ($top_users as $top)
-                        <div class="my-1.5 py-3	px-4 flex justify-center rounded-lg shadow-lg bg-white w-full ">
-                                <img class="w-10 h-10 rounded-full" src="{{ $top->avatar }}"
-                                    alt="">
-                            <div class="content flex justify-between py-2 w-full">
-                                <div class="px-2 justify-between">
-                                    {{ $top->name }}
-                                </div>
-                                <div class="justify-between">
-                                    {{ $top->posts_count }}
+                        <aside class="space-y-8">
+                            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+                                <h2 class="text-xl font-semibold text-gray-900 mb-4">Sobre a Generaldo Torres</h2>
+                                <p class="text-gray-600">{{ $setting->about }}</p>
+                            </div>
+                            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+                                <h2 class="text-xl font-semibold text-gray-900 mb-4">Categorias</h2>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach ($categories as $category)
+                                        <a href="{{ route('category.show', $category->slug) }}" class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm font-medium hover:bg-blue-100">{{ $category->name }}</a>
+                                    @endforeach
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        No Members !
-                    @endforelse
+                            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+                                <h2 class="text-xl font-semibold text-gray-900 mb-4">Etiquetas</h2>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach ($tags as $tag)
+                                        <a href="{{ route('tag.show', $tag->name) }}" class="px-3 py-1 rounded-full border border-blue-200 text-blue-700 text-sm hover:bg-blue-50">{{ $tag->name }}</a>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+                                <h2 class="text-xl font-semibold text-gray-900 mb-4">Top autores</h2>
+                                <ul class="space-y-4">
+                                    @forelse ($top_users as $top)
+                                        <li class="flex items-center gap-4">
+                                            <img src="{{ $top->avatar }}" alt="{{ $top->name }}" class="w-12 h-12 rounded-full object-cover">
+                                            <div>
+                                                <p class="font-semibold text-gray-900">{{ $top->name }}</p>
+                                                <p class="text-sm text-gray-500">{{ $top->posts_count }} artigos publicados</p>
+                                            </div>
+                                        </li>
+                                    @empty
+                                        <li class="text-gray-500">Ainda não existem autores destacados.</li>
+                                    @endforelse
+                                </ul>
+                            </div>
+                        </aside>
+                    </div>
                 </div>
+            @else
+                <div class="container mx-auto px-6 py-16">
+                    {{ $slot }}
+                </div>
+            @endif
+        </main>
 
-            </aside>
-        @endif
-
-
-    </div>
-
-    <footer class="w-full border-t bg-white pb-12">
-
-        <div class="w-full container mx-auto flex flex-col items-center">
-            <div class="flex flex-col md:flex-row text-center md:text-left md:justify-between py-6">
-                @foreach ($pages_footer as $page)
-                    <a href="{{ route('page.show', $page->slug) }}" class="uppercase px-3 hover:text-blue-700">{{ $page->name }}</a>
-                @endforeach
+        <footer class="bg-gray-900 text-gray-300">
+            <div class="container mx-auto px-6 py-12 grid gap-10 md:grid-cols-3">
+                <div>
+                    <h3 class="text-white text-lg font-semibold">{{ $setting->site_name }}</h3>
+                    <p class="mt-3 text-sm text-gray-400">{{ $setting->description }}</p>
+                    <div class="flex items-center gap-4 mt-6 text-xl">
+                        <a href="{{ $setting->url_fb }}" class="hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="{{ $setting->url_insta }}" class="hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="{{ $setting->url_twitter }}" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="{{ $setting->url_linkedin }}" class="hover:text-white"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white text-lg font-semibold">Mapa do site</h4>
+                    <ul class="mt-4 space-y-2 text-sm">
+                        <li><a href="{{ route('webhome') }}" class="hover:text-white">Início</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-white">Sobre nós</a></li>
+                        <li><a href="{{ route('services') }}" class="hover:text-white">Serviços</a></li>
+                        <li><a href="{{ route('gallery') }}" class="hover:text-white">Galeria</a></li>
+                        <li><a href="{{ route('blog.index') }}" class="hover:text-white">Blog</a></li>
+                        <li><a href="{{ route('contacts') }}" class="hover:text-white">Contactos</a></li>
+                        @foreach ($pages_footer as $page)
+                            <li><a href="{{ route('page.show', $page->slug) }}" class="hover:text-white">{{ $page->name }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white text-lg font-semibold">Notícias em destaque</h4>
+                    <p class="mt-4 text-sm text-gray-400">Acompanhe as novidades da Generaldo Torres e receba conteúdos sobre construção e engenharia.</p>
+                    <a href="{{ route('blog.index') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-blue-700 text-white text-sm font-semibold rounded-full hover:bg-blue-600">Visitar o blog</a>
+                </div>
             </div>
-            <div class="uppercase pb-6">&copy; {{ $setting->copy_rights }}</div>
-        </div>
-    </footer>
-
+            <div class="border-t border-gray-800">
+                <div class="container mx-auto px-6 py-4 text-center text-xs text-gray-500">&copy; {{ $setting->copy_rights }}</div>
+            </div>
+        </footer>
+    </div>
 </body>
 
 </html>

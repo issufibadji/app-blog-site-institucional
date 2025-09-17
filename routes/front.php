@@ -1,16 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Front\HomeController;
-use App\Http\Controllers\Front\ProfileController;
-use App\Http\Controllers\Front\PostController as FrontPostController;
 use App\Http\Controllers\Front\CategoryController as FrontCategoryController;
 use App\Http\Controllers\Front\CommentController;
+use App\Http\Controllers\Front\ContactController;
+use App\Http\Controllers\Front\GalleryController;
+use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\InstitutionalController;
 use App\Http\Controllers\Front\PageController as FrontPageController;
+use App\Http\Controllers\Front\PostController as FrontPostController;
+use App\Http\Controllers\Front\ProfileController;
+use App\Http\Controllers\Front\ServiceController;
 use App\Http\Controllers\Front\TagController as FrontTagController;
 
 // FrontEnd Routes [Public routes]
-Route::get('/', HomeController::class)->name('webhome');
+Route::get('/', [InstitutionalController::class, 'home'])->name('webhome');
+Route::get('/sobre-nos', [InstitutionalController::class, 'about'])->name('about');
+Route::get('/servicos', [ServiceController::class, 'index'])->name('services');
+Route::get('/galeria', [GalleryController::class, 'index'])->name('gallery');
+Route::get('/contactos', [ContactController::class, 'index'])->name('contacts');
+Route::get('/blog', HomeController::class)->name('blog.index');
 Route::post('/post/comment/{post}', [CommentController::class,'makeComment'])->name('post.comment');
 Route::resource('/comment', CommentController::class, ['only' => ['destroy']]);
 Route::get('/post/{slug}', [FrontPostController::class, 'getPostBySlug'])->name('post.show');
