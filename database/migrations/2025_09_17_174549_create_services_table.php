@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('icon')->nullable();
+            $table->string('image')->nullable();
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->unsignedInteger('order')->default(0);

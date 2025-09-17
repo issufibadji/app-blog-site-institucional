@@ -31,7 +31,7 @@ class GalleryFactory extends Factory
             'service_id' => class_exists(Service::class) ? Service::factory() : null,
             'title' => $title,
             'description' => fake()->paragraph(),
-            'image' => 'portfolio/' . fake()->uuid() . '.jpg',
-        };
+            'image_path' => 'portfolio/' . fake()->uuid() . '.jpg',
+        ];
     }
 }

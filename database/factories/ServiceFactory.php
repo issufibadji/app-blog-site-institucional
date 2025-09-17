@@ -38,6 +38,6 @@ class ServiceFactory extends Factory
                 'fa-solid fa-gears',
             ]),
             'image' => 'services/' . fake()->uuid() . '.jpg',
-        };
+        ];
     }
 }
