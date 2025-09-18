@@ -47,56 +47,11 @@ class Gallery extends Model
     /**
      * Accessor for the public image url.
      */
-    public function getImageUrlAttribute(): string
+   public function getImageUrlAttribute(): string
     {
-        $path = $this->image_path;
-
-        if (is_null($path) || $path === '') {
-            return asset('import/assets/post-pic-dummy.png');
-        }
-
-        if (filter_var($path, FILTER_VALIDATE_URL)) {
-            return $path;
-        }
-
-        $normalizedPath = str_replace('\\', '/', $path);
-        $normalizedPath = ltrim($normalizedPath, '/');
-
-        $prefixesToStrip = [
-            'public/',
-            'storage/public/',
-            'storage/app/public/',
-        ];
-
-        foreach ($prefixesToStrip as $prefix) {
-            if (str_starts_with($normalizedPath, $prefix)) {
-                $normalizedPath = substr($normalizedPath, strlen($prefix));
-            }
-        }
-
-        if (str_starts_with($normalizedPath, 'storage/')) {
-            $publicPath = public_path($normalizedPath);
-            if (file_exists($publicPath)) {
-                return asset($normalizedPath);
-            }
-
-            $normalizedPath = ltrim(substr($normalizedPath, strlen('storage/')), '/');
-        }
-
-        if (Storage::disk('public')->exists($normalizedPath)) {
-            return Storage::disk('public')->url($normalizedPath);
-        }
-
-        if (file_exists(public_path($normalizedPath))) {
-            return asset($normalizedPath);
-        }
-
-        $publicStoragePath = 'storage/' . ltrim($normalizedPath, '/');
-        if (file_exists(public_path($publicStoragePath))) {
-            return asset($publicStoragePath);
-        }
-
-        return asset('import/assets/post-pic-dummy.png');
+        return $this->image_path
+            ? asset('storage/' . $this->image_path)
+            : asset('import/assets/post-pic-dummy.png');
     }
 
     /**

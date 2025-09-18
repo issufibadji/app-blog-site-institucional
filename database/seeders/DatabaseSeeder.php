@@ -3,16 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
         \App\Models\Setting::factory(1)->create();
         \App\Models\User::factory()->create([
@@ -26,19 +23,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Page::factory(10)->create();
         \App\Models\Tag::factory(10)->create();
 
-        if (
-            class_exists(\App\Models\Service::class)
-            && class_exists(\App\Models\Gallery::class)
-            && Schema::hasTable('services')
-            && Schema::hasTable('galleries')
-        ) {
-            \App\Models\Service::factory(5)
-                ->create()
-                ->each(function ($service) {
-                    \App\Models\Gallery::factory(4)
-                        ->for($service)
-                        ->create();
-                });
-        }
+        // ✅ chama o seeder da galeria
+        $this->call(GallerySeeder::class);
     }
 }

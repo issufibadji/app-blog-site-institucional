@@ -40,7 +40,7 @@
                                     <td class="py-4 px-6 border-b border-grey-light">{{ $gallery->title }}</td>
                                     <td class="py-4 px-6 border-b border-grey-light">{{ optional($gallery->service)->title ?? '—' }}</td>
                                     <td class="py-4 px-6 border-b border-grey-light">
-                                        <img src="{{ $gallery->image_url }}" alt="{{ $gallery->title }}" class="h-16 rounded">
+                                        <img src="{{  asset('storage/' . $gallery->image_path)  }}" alt="{{ $gallery->title }}" class="h-16 rounded">
                                     </td>
                                     <td class="py-4 px-6 border-b border-grey-light">
                                         @can('update', $gallery)

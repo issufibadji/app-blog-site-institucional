@@ -20,7 +20,7 @@
                             $subtitle = $gallery->description ?: optional($gallery->service)->title;
                         @endphp
                         <figure class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                            <img src="{{ $gallery->image_url }}" alt="{{ $gallery->title ?? 'Imagem da galeria' }}" class="h-64 w-full object-cover transition duration-500 group-hover:scale-105">
+                            <img src="{{ asset('storage/' . $gallery->image_path)  }}" alt="{{ $gallery->title ?? 'Imagem da galeria' }}" class="h-64 w-full object-cover transition duration-500 group-hover:scale-105">
                             <figcaption class="p-6 text-gray-700 text-center">
                                 <span class="block font-semibold text-gray-900">{{ $gallery->title }}</span>
                                 @if ($subtitle)

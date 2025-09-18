@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\GalleryRequest;
 use App\Models\Gallery;
 use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class GalleryController extends Controller
@@ -43,9 +44,15 @@ class GalleryController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('images/galleries', 'public');
+       if ($request->hasFile('image')) {
+            $filename = uniqid() . '.' . $request->file('image')->extension();
+            // Grava em storage/app/public/galleries
+            $request->file('image')->storeAs('galleries', $filename, 'public');
+            // Banco recebe APENAS "galleries/arquivo.jpg"
+            $data['image_path'] = 'galleries/' . $filename;
         }
+
+
 
         unset($data['image']);
 
@@ -71,9 +78,16 @@ class GalleryController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('images/galleries', 'public');
+       if ($request->hasFile('image')) {
+            if ($gallery->image_path && Storage::disk('public')->exists($gallery->image_path)) {
+                Storage::disk('public')->delete($gallery->image_path);
+            }
+
+            $filename = uniqid() . '.' . $request->file('image')->extension();
+            $request->file('image')->storeAs('galleries', $filename, 'public');
+            $data['image_path'] = 'galleries/' . $filename;
         }
+
 
         unset($data['image']);
 
@@ -87,6 +101,10 @@ class GalleryController extends Controller
      */
     public function destroy(Gallery $gallery): RedirectResponse
     {
+        if ($gallery->image_path && Storage::disk('public')->exists('galleries/' . $gallery->image_path)) {
+            Storage::disk('public')->delete('galleries/' . $gallery->image_path);
+        }
+
         $gallery->delete();
 
         return to_route('admin.gallery.index')->with('message', trans('admin.gallery_deleted'));
