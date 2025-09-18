@@ -10,8 +10,20 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'appName' => config('app.name'),
+    ]);
+});
 
+Route::get('/teste', function () {
+    return Inertia::render('Teste', [
+        'mensagem' => 'Inertia está funcionando 🚀'
+    ]);
+});
 require __DIR__ . '/front.php';
 require __DIR__ . '/admin.php';
 require __DIR__ . '/auth.php';
